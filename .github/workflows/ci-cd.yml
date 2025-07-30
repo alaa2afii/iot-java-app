@@ -1,0 +1,41 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - develop
+      - master
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Build with Maven
+        run: mvn clean install
+
+  deploy-dev:
+    if: github.ref == 'refs/heads/develop'
+    needs: build-test
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "✅ Deploying to DEV environment..."
+
+  deploy-test:
+    if: github.ref == 'refs/heads/develop'
+    needs: deploy-dev
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "✅ Deploying to TEST environment..."
+
+  deploy-stg:
+    if: github.ref == 'refs/heads/master'
+    needs: build-test
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "✅ Deploying to STAGING environment..."
