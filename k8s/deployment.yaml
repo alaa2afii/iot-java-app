@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iot-java-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iot-java-app
+  template:
+    metadata:
+      labels:
+        app: iot-java-app
+    spec:
+      containers:
+      - name: iot-java-app
+        image: your-dockerhub-username/iot-java-app:latest
+        ports:
+        - containerPort: 8080
